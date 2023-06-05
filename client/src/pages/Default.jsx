@@ -1,4 +1,3 @@
-import { useState, useEffect } from "react";
 import { Box } from "@mui/material";
 import Row1 from "./Row1";
 import Row2 from "./Row2";
@@ -7,16 +6,14 @@ import Sidebar from "../components/Sidebar";
 import AuthedNavbar from "../components/AuthedNavbar";
 
 const gridTemplateLargeScreens = `
-  "a b c"
-  "a b c"
-  "a b c"
-  "a b f"
-  "d e f"
-  "d e f"
-  "d h i"
-  "g h i"
-  "g h j"
-  "g h j"
+  "a b c c"
+  "a b c c"
+  "d d e e"
+  "d d e e" 
+  "d d g g"
+  "f f g g"
+  "f f g g"
+  "f f g g"
 `;
 
 const Default = () => {
@@ -25,15 +22,17 @@ const Default = () => {
       <AuthedNavbar />
       <Sidebar />
       <Box
-        marginLeft="16rem"
+        width="100%"
+        height="100%"
         display="grid"
-        gap="0.5rem"
+        paddingLeft="16rem"
+        gap="1.5rem"
         marginTop="1rem"
         sx={{
-          gridTemplateColumns: "repeat(3, minmax(370px, 1fr))",
-          gridTemplateRows: "repeat(10, minmax(60px, 1fr))",
+          gridTemplateColumns: "repeat(4, minmax(120px, 1fr))",
+          gridTemplateRows: "repeat(10, minmax(100px, 1fr))",
           gridTemplateAreas: gridTemplateLargeScreens,
-          paddingTop: "5.2rem",
+          marginTop: "6rem",
         }}
       >
         <Row1 />

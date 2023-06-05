@@ -6,7 +6,6 @@ function Row2() {
     <>
       <DashboardBox gridArea="d"></DashboardBox>
       <DashboardBox gridArea="e"></DashboardBox>
-      <DashboardBox gridArea="f"></DashboardBox>
     </>
   );
 }
