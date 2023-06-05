@@ -26,7 +26,12 @@ const AuthedNavbar = () => {
             paddingLeft="1rem"
             paddingTop="1rem"
             paddingBottom="1rem"
-            sx={{ backgroundColor: "#ffffff" }}
+            sx={{
+              backgroundColor: "#ffffff",
+              position: "fixed",
+              width: "100%",
+              zIndex: 1,
+            }}
           >
             <AccountBalanceWalletIcon
               sx={{ fontSize: "40px", marginLeft: "1rem" }}
@@ -57,7 +62,10 @@ const AuthedNavbar = () => {
               </Box>
               <LogoutIcon
                 onClick={handleLogout}
-                sx={{ marginLeft: "1rem", cursor: "pointer" }}
+                sx={{
+                  marginLeft: "1rem",
+                  cursor: "pointer",
+                }}
               />
             </Box>
           </Box>

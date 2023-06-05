@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { Box } from "@mui/material";
 import Row1 from "./Row1";
 import Row2 from "./Row2";
@@ -18,7 +19,7 @@ const gridTemplateLargeScreens = `
   "g h j"
 `;
 
-const Dashboard = () => {
+const Default = () => {
   return (
     <>
       <AuthedNavbar />
@@ -32,6 +33,7 @@ const Dashboard = () => {
           gridTemplateColumns: "repeat(3, minmax(370px, 1fr))",
           gridTemplateRows: "repeat(10, minmax(60px, 1fr))",
           gridTemplateAreas: gridTemplateLargeScreens,
+          paddingTop: "5.2rem",
         }}
       >
         <Row1 />
@@ -42,4 +44,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default Default;
