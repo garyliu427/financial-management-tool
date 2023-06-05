@@ -27,7 +27,7 @@ const Navbar = () => {
                   onClick={() => navigate("/")}
                 />
                 <Typography variant="h3" fontSize="20px">
-                  Finanseer
+                  BudgetWise
                 </Typography>
               </Box>
             </Box>

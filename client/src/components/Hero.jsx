@@ -13,7 +13,7 @@ const Hero = () => {
         <Box paddingLeft="10rem" paddingTop="10rem">
           <Box sx={{ height: "14rem" }}>
             <Typography variant="h1" width="500px" marginBottom="3rem">
-              Use Finanseer to Power Your Finance
+              Use BudgetWise to Power Your Finance
             </Typography>
           </Box>
           <Typography
@@ -22,7 +22,7 @@ const Hero = () => {
             marginBottom="3rem"
             lineHeight="2rem"
           >
-            Finanseer is Financial Dashboard System which helps you to manage
+            BudgetWise is Financial Dashboard System which helps you to manage
             money.
           </Typography>
           <Button

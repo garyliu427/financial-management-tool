@@ -1,15 +1,15 @@
-import axios from "axios";
+import axios from "./axios";
 
 export const postExpenseAPI = async (
   authToken,
-  amount,
-  category,
-  description,
   date,
+  category,
+  amount,
+  description,
 ) => {
   return await axios.post(
     "/expense",
-    { amount, category, description, date },
+    { date, category, amount, description },
     {
       headers: {
         Authorization: authToken,
@@ -40,4 +40,12 @@ export const editExpenseAPI = async (
       },
     },
   );
+};
+
+export const fetchExpenseAPI = async (authToken) => {
+  return await axios.get("/expense/transactions", {
+    headers: {
+      Authorization: authToken,
+    },
+  });
 };

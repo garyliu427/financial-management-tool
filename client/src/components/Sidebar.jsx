@@ -39,7 +39,10 @@ const Sidebar = () => {
           <List>
             <ListItemButton onClick={() => navigate("/dashboard/default")}>
               <DashboardIcon
-                sx={{ marginRight: "1.5rem", marginLeft: "1rem" }}
+                sx={{
+                  marginRight: "1.5rem",
+                  marginLeft: "1rem",
+                }}
               />
               <ListItemText primary="Default" />
             </ListItemButton>

@@ -73,5 +73,6 @@ class Transactions(Resource):
     @api.response(500, "Database error")
     def get(self):
         user_id = check_token(request)
-        transactions = get_user_transactions(user_id)  # Implement this function to fetch transactions from the database
-        return jsonify(transactions)
+        transactions = get_user_transactions(user_id)
+        serialized_transactions = [serialize_transaction(transaction) for transaction in transactions]
+        return jsonify(serialized_transactions)

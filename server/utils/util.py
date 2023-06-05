@@ -144,16 +144,14 @@ def validate_expense_transacation_id(expense_id):
 
 def get_user_transactions(user_id):
     transactions = Expense_transaction.query.filter_by(user_id=user_id).all()
-    formatted_transactions = []
-    
-    for transaction in transactions:
-        formatted_transaction = {
-            "id": transaction.expense_transaction_id,
-            "amount": transaction.expense_transaction_amount,
-            "category": transaction.expense_category,
-            "description": transaction.expense_transaction_description,
-            "date": transaction.expense_transaction_datetime.strftime("%Y-%m-%d")
-        }
-        formatted_transactions.append(formatted_transaction)
-    
-    return formatted_transactions
+    return transactions
+
+
+def serialize_transaction(transaction):
+    return {
+        "expense_transaction_id": transaction.expense_transaction_id,
+        "date": transaction.expense_transaction_datetime.strftime("%Y-%m-%d"),  # Convert date to string format
+        "category": transaction.expense_category_id,
+        "amount": transaction.expense_transaction_amount,
+        "description": transaction.expense_transaction_description,
+    }

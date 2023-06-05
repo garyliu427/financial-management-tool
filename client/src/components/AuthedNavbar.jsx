@@ -32,7 +32,7 @@ const AuthedNavbar = () => {
               sx={{ fontSize: "40px", marginLeft: "1rem" }}
             />
             <Typography variant="h4" fontSize="20px" marginLeft="1rem">
-              Finanseer
+              BudgetWise
             </Typography>
             <Box
               display="flex"

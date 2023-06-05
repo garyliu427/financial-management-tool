@@ -106,7 +106,7 @@ class ResetPassword(Resource):
         msg = email.message_from_string('This is your new password: ' + str(new_password))
         msg['From'] = SenderEmail
         msg['To'] = receiveemail
-        msg['Subject'] = "Finanseer | Reset Password"
+        msg['Subject'] = "BudgetWise | Reset Password"
 
         # Establish Connection to SMTP Server and Send Email
         s = smtplib.SMTP(SMTPServer, SMTPPort)
