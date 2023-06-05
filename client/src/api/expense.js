@@ -20,14 +20,14 @@ export const postExpenseAPI = async (
 
 export const editExpenseAPI = async (
   authToken,
-  expense_transacation_id,
+  expense_transaction_id,
   amount,
   category,
   description,
   date,
 ) => {
   return await axios.put(
-    `/expense/${expense_transacation_id}`,
+    `/expense/${expense_transaction_id}`,
     {
       amount,
       category,
@@ -44,6 +44,14 @@ export const editExpenseAPI = async (
 
 export const fetchExpenseAPI = async (authToken) => {
   return await axios.get("/expense/transactions", {
+    headers: {
+      Authorization: authToken,
+    },
+  });
+};
+
+export const deleteExpenseAPI = async (authToken, expense_transaction_id) => {
+  return await axios.delete(`/expense/${expense_transaction_id}`, {
     headers: {
       Authorization: authToken,
     },

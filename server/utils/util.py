@@ -129,17 +129,19 @@ def initialize_categories():
 
 
 # check if the user_id exist
-def validate_expense_transacation_id(expense_id):
+def validate_expense_transaction_id(user_id, expense_transaction_id):
     try:
-        expense_id = int(expense_id)
+        expense_transaction_id = int(expense_transaction_id)
     except:
-        abort(401, "User_id {} is not an integer".format(expense_id))
+        abort(401, "User_id {} is not an integer".format(expense_transaction_id))
 
-    expense_id = db.session.query(Expense_transaction).get(expense_id)
-    if not expense_id:
-        abort(401, "User_id {} does not exist".format(expense_id))
+    expense_transaction = db.session.query(Expense_transaction).get(expense_transaction_id)
 
-    return expense_id
+    if expense_transaction.user_id != user_id:
+        abort(
+            401, "review_id {} does not belong to user_id {}".format(expense_transaction_id, user_id)
+        )
+    return expense_transaction_id
 
 
 def get_user_transactions(user_id):
@@ -155,3 +157,10 @@ def serialize_transaction(transaction):
         "amount": transaction.expense_transaction_amount,
         "description": transaction.expense_transaction_description,
     }
+
+def delete_transaction(expense_transaction_id):
+    transaction = db.session.get(Expense_transaction, expense_transaction_id)
+    if transaction is None:
+        raise ValueError("Transaction not found for ID: {}".format(expense_transaction_id))
+    db.session.delete(transaction)
+    db.session.commit()

@@ -17,6 +17,7 @@ import {
   postExpenseAPI,
   fetchExpenseAPI,
   editExpenseAPI,
+  deleteExpenseAPI,
 } from "../api/expense";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -126,13 +127,25 @@ function Accounts() {
     }
   };
 
+  const deleteExpenseTransaction = async (trueId) => {
+    const authToken = localStorage.getItem("authToken");
+    try {
+      // Call the deleteExpenseAPI with the trueId parameter
+      await deleteExpenseAPI(authToken, trueId);
+      // After successfully deleting the transaction, you can update the rows state by filtering out the deleted transaction
+      setRows((prevRows) => prevRows.filter((row) => row.true_id !== trueId));
+    } catch (error) {
+      alert(error);
+    }
+  };
+
   useEffect(() => {
     const fetchExpenseTransactions = async () => {
       const authToken = localStorage.getItem("authToken");
       try {
         const response = await fetchExpenseAPI(authToken);
         const transactions = response.data; // Assuming response.data contains the transactions array
-        const formattedRows = transactions.map((transaction) => {
+        const formattedRows = transactions.map((transaction, index) => {
           const transactionDate = new Date(transaction.date);
           const formattedDate = transactionDate.toLocaleDateString("en-AU", {
             weekday: "long",
@@ -142,14 +155,14 @@ function Accounts() {
           });
 
           return {
-            id: transaction.expense_transaction_id,
+            id: index + 1,
+            true_id: transaction.expense_transaction_id,
             date: formattedDate,
             category: transaction.category,
             amount: transaction.amount,
             description: transaction.description,
           };
         });
-
         setRows(formattedRows);
       } catch (error) {
         alert(error);
@@ -159,11 +172,13 @@ function Accounts() {
     fetchExpenseTransactions();
   }, []);
 
+  console.log(rows);
+
   return (
     <>
       <AuthedNavbar />
       <Sidebar />
-      <Box marginLeft="15rem">
+      <Box marginLeft="15rem" marginTop="6rem" display="flex">
         <Typography padding="1rem" variant="h4">
           Your Transactions List
         </Typography>

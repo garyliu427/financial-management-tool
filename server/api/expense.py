@@ -37,16 +37,16 @@ class Expense(Resource):
         insert_new_expense(user_id, amount, category, description, date)
         return
 
-@api.route("/<int:expense_transacation_id>")
+@api.route("/<int:expense_transaction_id>")
 class Expense(Resource):
     @api.doc(description="edit expense")
     @api.expect(auth_header, edit_expense_model)
     @api.response(200, "Success")
     @api.response(403, "Incorrect email or password / No json body supplied")
     @api.response(500, "Database error")
-    def put(self, expense_transacation_id):
+    def put(self, expense_transaction_id):
         user_id = check_token(request)
-        expense_transacation_id = validate_expense_transacation_id(expense_transacation_id)
+        expense_transaction_id = validate_expense_transaction_id(user_id, expense_transaction_id)
         data = request.json
         if not data:
             abort(403, "No json supplied")
@@ -60,7 +60,7 @@ class Expense(Resource):
             abort(403, "Require amount, category, description, and date in the json")
 
 
-        edit_transacation(user_id, amount, category, description, date)
+        edit_transaction(user_id, amount, category, description, date)
         return
     
 
@@ -76,3 +76,17 @@ class Transactions(Resource):
         transactions = get_user_transactions(user_id)
         serialized_transactions = [serialize_transaction(transaction) for transaction in transactions]
         return jsonify(serialized_transactions)
+    
+
+@api.route("/<int:expense_transaction_id>")
+class Transactions(Resource):
+    @api.doc(description="delete a transaction")
+    @api.expect(auth_header)
+    @api.response(200, "Success")  # Assuming you have a transaction_model defined
+    @api.response(403, "Incorrect email or password / Token not provided")
+    @api.response(500, "Database error")
+    def delete(self, expense_transaction_id):
+        user_id = check_token(request)
+        expense_transaction_id = validate_expense_transaction_id(user_id, expense_transaction_id)
+        delete_transaction(expense_transaction_id)
+        return
