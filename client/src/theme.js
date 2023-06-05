@@ -11,7 +11,7 @@ export const themeOptions = createTheme({
       main: "#f50057",
     },
     background: {
-      default: "#f5f7fb",
+      default: "#eef1f6",
     },
     success: {
       main: "#2da58e",

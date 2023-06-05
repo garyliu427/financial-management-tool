@@ -24,9 +24,10 @@ const Dashboard = () => {
       <AuthedNavbar />
       <Sidebar />
       <Box
-        marginLeft="15rem"
+        marginLeft="16rem"
         display="grid"
-        gap="1rem"
+        gap="0.5rem"
+        marginTop="1rem"
         sx={{
           gridTemplateColumns: "repeat(3, minmax(370px, 1fr))",
           gridTemplateRows: "repeat(10, minmax(60px, 1fr))",
