@@ -7,8 +7,9 @@ import Navbar from "../src/components/Navbar";
 import Hero from "../src/components/Hero";
 import Register from "../src/components/Register";
 import Login from "../src/components/Login";
-import Accounts from "./pages/Accounts";
+import Expense from "./pages/Expense";
 import Default from "./pages/Default";
+import Revenue from "./pages/Revenue";
 import { useSelector } from "react-redux";
 import { selectUser } from "./features/userSlice";
 
@@ -37,7 +38,8 @@ function App() {
                 }
               />
               <Route path="/dashboard/default" element={<Default />} />
-              <Route path="/dashboard/accounts" element={<Accounts />} />
+              <Route path="/dashboard/expense" element={<Expense />} />
+              <Route path="/dashboard/revenue" element={<Revenue />} />
               <Route path="/predictions" element={<div>predictions</div>} />
               <Route path="/register" element={<Register />} />
               <Route path="/login" element={<Login />} />

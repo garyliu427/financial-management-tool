@@ -3,9 +3,11 @@ import DashboardBox from "../../src/components/DashboardBox";
 import { Typography } from "@mui/material";
 import BoxHeader from "../../src/components/BoxHeader";
 import { fetchExpenseAPI } from "../api/expense";
+import { fetchRevenueAPI } from "../api/revenue";
 
 function Row1() {
-  const [data, setData] = useState([]);
+  const [expense, setExpense] = useState([]);
+  const [revenue, setRevenue] = useState([]);
   const authToken = localStorage.getItem("authToken");
   const currentYear = new Date().getFullYear();
 
@@ -13,8 +15,8 @@ function Row1() {
     const fetchExpenseTransactions = async () => {
       try {
         const response = await fetchExpenseAPI(authToken);
-        const transactions = response.data; // Assuming response.data contains the transactions array
-        setData(transactions);
+        const transactions = response.data;
+        setExpense(transactions);
       } catch (error) {
         alert(error);
       }
@@ -23,23 +25,52 @@ function Row1() {
     fetchExpenseTransactions();
   }, []);
 
+  useEffect(() => {
+    const fetchRevenueTransactions = async () => {
+      try {
+        const response = await fetchRevenueAPI(authToken);
+        const transactions = response.data;
+        setRevenue(transactions);
+      } catch (error) {
+        alert(error);
+      }
+    };
+
+    fetchRevenueTransactions();
+  }, []);
+
   const totalExpense = useMemo(() => {
-    const filteredData = data.filter(
+    const filteredData = expense.filter(
       (transaction) => new Date(transaction.date).getFullYear() === currentYear,
     );
     return filteredData.reduce(
       (accumulator, transaction) => accumulator + transaction.amount,
       0,
     );
-  }, [data, currentYear]);
+  }, [expense, currentYear]);
+
+  const totalRevenue = useMemo(() => {
+    const filteredData = revenue.filter(
+      (transaction) => new Date(transaction.date).getFullYear() === currentYear,
+    );
+    return filteredData.reduce(
+      (accumulator, transaction) => accumulator + transaction.amount,
+      0,
+    );
+  }, [revenue, currentYear]);
 
   return (
     <>
-      <DashboardBox gridArea="a">
+      <DashboardBox gridArea="a" style={{ backgroundColor: "#2da58e" }}>
         <BoxHeader title={`Total Expense in ${currentYear}`} />
-        <Typography>${totalExpense}</Typography>
+        <Typography sx={{ color: "#ffffff", paddingLeft: "1rem" }}>
+          ${totalExpense}
+        </Typography>
       </DashboardBox>
-      <DashboardBox gridArea="b"></DashboardBox>
+      <DashboardBox gridArea="b">
+        <BoxHeader title={`Total Earning in ${currentYear}`} />
+        <Typography sx={{ paddingLeft: "1rem" }}>${totalRevenue}</Typography>
+      </DashboardBox>
       <DashboardBox gridArea="c"></DashboardBox>
     </>
   );

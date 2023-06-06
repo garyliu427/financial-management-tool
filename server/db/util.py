@@ -100,3 +100,29 @@ def edit_transaction(expense_transaction_id, amount, category, description, date
     if category is not None:
         expense.expense_category_id = category
     db.session.commit()
+
+
+def insert_new_revenue(user_id, amount, category, description, date):
+    new_revenue = Revenue_transaction(
+        user_id=user_id,
+        revenue_category_id=category,
+        revenue_transaction_amount=amount,
+        revenue_transaction_description=description,
+        revenue_transaction_datetime=date,
+    )
+
+    db.session.add(new_revenue)
+    db.session.commit()
+
+
+def edit_transaction(expense_transaction_id, amount, category, description, date):
+    expense = db.session.get(Expense_transaction, expense_transaction_id)
+    if amount is not None:
+        expense.expense_transaction_amount = amount
+    if date is not None:
+        expense.expense_transaction_datetime = date
+    if description is not None:
+        expense.expense_transaction_description = description
+    if category is not None:
+        expense.expense_category_id = category
+    db.session.commit()

@@ -14,11 +14,10 @@ import {
 import { DataGrid } from "@mui/x-data-grid";
 import { useTheme } from "@mui/material/styles";
 import {
-  postExpenseAPI,
-  fetchExpenseAPI,
-  editExpenseAPI,
-  deleteExpenseAPI,
-} from "../api/expense";
+  postRevenueAPI,
+  fetchRevenueAPI,
+  editRevenueAPI,
+} from "../api/revenue";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -74,7 +73,7 @@ const categoryMapping = {
   10: "Others",
 };
 
-function Accounts() {
+function Revenue() {
   const { palette } = useTheme();
   const [amount, setAmount] = useState("");
   const [category, setCategory] = useState("");
@@ -84,13 +83,13 @@ function Accounts() {
 
   const [openDia, setOpenDia] = useState(false);
 
-  const addExpenseTransaction = async (date, category, amount, description) => {
+  const addRevenueTransaction = async (date, category, amount, description) => {
     const authToken = localStorage.getItem("authToken");
     try {
       const formattedDate = date.toISOString().split("T")[0];
       const amountValue = parseFloat(amount);
       const categoryValue = parseInt(category);
-      await postExpenseAPI(
+      await postRevenueAPI(
         authToken,
         formattedDate,
         categoryValue,
@@ -102,7 +101,7 @@ function Accounts() {
     }
   };
 
-  const editExpenseTransaction = async (
+  const editRevenueTransaction = async (
     id,
     date,
     category,
@@ -114,7 +113,7 @@ function Accounts() {
       const formattedDate = date.toISOString().split("T")[0];
       const amountValue = parseFloat(amount);
       const categoryValue = parseInt(category);
-      await editExpenseAPI(
+      await editRevenueAPI(
         authToken,
         id,
         formattedDate,
@@ -127,23 +126,11 @@ function Accounts() {
     }
   };
 
-  const deleteExpenseTransaction = async (trueId) => {
-    const authToken = localStorage.getItem("authToken");
-    try {
-      // Call the deleteExpenseAPI with the trueId parameter
-      await deleteExpenseAPI(authToken, trueId);
-      // After successfully deleting the transaction, you can update the rows state by filtering out the deleted transaction
-      setRows((prevRows) => prevRows.filter((row) => row.true_id !== trueId));
-    } catch (error) {
-      alert(error);
-    }
-  };
-
   useEffect(() => {
-    const fetchExpenseTransactions = async () => {
+    const fetchRevenueTransactions = async () => {
       const authToken = localStorage.getItem("authToken");
       try {
-        const response = await fetchExpenseAPI(authToken);
+        const response = await fetchRevenueAPI(authToken);
         const transactions = response.data; // Assuming response.data contains the transactions array
         const formattedRows = transactions.map((transaction, index) => {
           const transactionDate = new Date(transaction.date);
@@ -156,7 +143,7 @@ function Accounts() {
 
           return {
             id: index + 1,
-            true_id: transaction.expense_transaction_id,
+            true_id: transaction.revenue_transaction_id,
             date: formattedDate,
             category: transaction.category,
             amount: transaction.amount,
@@ -169,7 +156,7 @@ function Accounts() {
       }
     };
 
-    fetchExpenseTransactions();
+    fetchRevenueTransactions();
   }, []);
 
   console.log(rows);
@@ -194,7 +181,7 @@ function Accounts() {
           }}
           onClick={() => setOpenDia(true)}
         >
-          Add your transaction
+          Record your income
         </Button>
         <Dialog open={openDia} maxWidth="lg">
           <DialogContent>
@@ -260,7 +247,7 @@ function Accounts() {
             <Button onClick={() => setOpenDia(false)}>Cancel</Button>
             <Button
               onClick={() => {
-                addExpenseTransaction(date, category, amount, description);
+                addRevenueTransaction(date, category, amount, description);
                 setOpenDia(false);
               }}
             >
@@ -284,7 +271,7 @@ function Accounts() {
             // Update the rows with the new data
             // setRows(newData);
           }}
-          onEditCellChange={editExpenseTransaction}
+          onEditCellChange={editRevenueTransaction}
           rowCount={rows.length}
           rowsPerPageOptions={[10]} // Set the available page size options to only 10
           checkboxSelection
@@ -295,4 +282,4 @@ function Accounts() {
   );
 }
 
-export default Accounts;
+export default Revenue;

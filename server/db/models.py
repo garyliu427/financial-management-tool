@@ -27,18 +27,18 @@ class Expense_transaction(db.Model):
     expense_transaction_description = db.Column(db.String(100), nullable=False)
 
 
-class Income_Category(db.Model):
-    __tablename__ = 'income_category'
-    income_category_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    income_category_name = db.Column(db.String(50), nullable=False)
+class Revenue_Category(db.Model):
+    __tablename__ = 'revenue_category'
+    revenue_category_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    revenue_category_name = db.Column(db.String(50), nullable=False)
 
 
-class Income_transaction(db.Model):
-    __tablename__ = 'income_transaction'
-    income_transaction_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+class Revenue_transaction(db.Model):
+    __tablename__ = 'revenue_transaction'
+    revenue_transaction_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'))
-    income_category_id = db.Column(db.Integer, db.ForeignKey('income_category.income_category_id'))
-    income_amount = db.Column(db.Float, nullable=False)
-    income_datetime = db.Column(db.DateTime, default=datetime.now)
-    income_description = db.Column(db.String(100), nullable=False)
+    revenue_category_id = db.Column(db.Integer, db.ForeignKey('revenue_category.revenue_category_id'))
+    revenue_transaction_amount = db.Column(db.Float, nullable=False)
+    revenue_transaction_datetime = db.Column(db.DateTime, default=datetime.now)
+    revenue_transaction_description = db.Column(db.String(100), nullable=False)
 

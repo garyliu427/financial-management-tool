@@ -76,3 +76,23 @@ edit_expense_model = api.model(
         "date": fields.String(required=True, example="2021-01-01"),
     },
 )
+
+add_revenue_model = api.model(
+    "add_revenue",
+    {
+        "amount": fields.Float(required=True, example=1000.45),
+        "category": fields.Integer(required=True, example=1),
+        "description": fields.String(required=True, example="payslip"),
+        "date": fields.String(required=True, example="2023-02-01"),
+    },
+)
+
+edit_revenue_model = api.model(
+    "edit_revenue",
+    {
+        "amount": fields.Float(required=True, example=123.45),
+        "category": fields.Integer(required=True, example=1),
+        "description": fields.String(required=True, example="buy a burger"),
+        "date": fields.String(required=True, example="2021-01-01"),
+    },
+)

@@ -10,6 +10,7 @@ import { Box } from "@mui/material";
 import ReceiptIcon from "@mui/icons-material/Receipt";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import BatchPredictionIcon from "@mui/icons-material/BatchPrediction";
+import PaidIcon from "@mui/icons-material/Paid";
 
 const Sidebar = () => {
   const drawerWidth = 240;
@@ -46,9 +47,13 @@ const Sidebar = () => {
               />
               <ListItemText primary="Default" />
             </ListItemButton>
-            <ListItemButton onClick={() => navigate("/dashboard/accounts")}>
+            <ListItemButton onClick={() => navigate("/dashboard/expense")}>
               <ReceiptIcon sx={{ marginRight: "1.5rem", marginLeft: "1rem" }} />
-              <ListItemText primary="Accounts" />
+              <ListItemText primary="Expense" />
+            </ListItemButton>
+            <ListItemButton onClick={() => navigate("/dashboard/revenue")}>
+              <PaidIcon sx={{ marginRight: "1.5rem", marginLeft: "1rem" }} />
+              <ListItemText primary="Revenue" />
             </ListItemButton>
             <ListItemButton onClick={() => navigate("/dashboard/predictions")}>
               <BatchPredictionIcon

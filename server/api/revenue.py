@@ -6,15 +6,15 @@ from utils.util import *
 
 
 api = Namespace(
-    "expense",
-    description="record expense",
+    "revenue",
+    description="record revenue",
 )
 
 
 @api.route("")
-class Expense(Resource):
-    @api.doc(description="record expense")
-    @api.expect(auth_header, add_expense_model)
+class Revenue(Resource):
+    @api.doc(description="record revenue")
+    @api.expect(auth_header, add_revenue_model)
     @api.response(200, "Success")
     @api.response(403, "Incorrect email or password / No json body supplied")
     @api.response(500, "Database error")
@@ -34,20 +34,19 @@ class Expense(Resource):
             abort(403, "Require amount, category, description, and date in the json")
 
 
-        insert_new_expense(user_id, amount, category, description, date)
+        insert_new_revenue(user_id, amount, category, description, date)
         return
 
-
-@api.route("/<int:expense_transaction_id>")
-class Expense(Resource):
-    @api.doc(description="edit expense")
-    @api.expect(auth_header, edit_expense_model)
+@api.route("/<int:revenue_transaction_id>")
+class Revenue(Resource):
+    @api.doc(description="edit revenue")
+    @api.expect(auth_header, edit_revenue_model)
     @api.response(200, "Success")
     @api.response(403, "Incorrect email or password / No json body supplied")
     @api.response(500, "Database error")
-    def put(self, expense_transaction_id):
+    def put(self, revenue_transaction_id):
         user_id = check_token(request)
-        expense_transaction_id = validate_expense_transaction_id(user_id, expense_transaction_id)
+        revenue_transaction_id = validate_revenue_transaction_id(user_id, revenue_transaction_id)
         data = request.json
         if not data:
             abort(403, "No json supplied")
@@ -66,7 +65,7 @@ class Expense(Resource):
     
 
 @api.route("/transactions")
-class Expense_Transaction(Resource):
+class Revenue_Transactions(Resource):
     @api.doc(description="get all transactions for the user")
     @api.expect(auth_header)
     @api.response(200, "Success")  # Assuming you have a transaction_model defined
@@ -74,20 +73,20 @@ class Expense_Transaction(Resource):
     @api.response(500, "Database error")
     def get(self):
         user_id = check_token(request)
-        transactions = get_user_expense_transactions(user_id)
-        serialized_transactions = [serialize_expense_transaction(transaction) for transaction in transactions]
+        transactions = get_user_revenue_transactions(user_id)
+        serialized_transactions = [serialize_revenue_transaction(transaction) for transaction in transactions]
         return jsonify(serialized_transactions)
     
 
-@api.route("/<int:expense_transaction_id>")
-class Expense_Transaction(Resource):
+@api.route("/<int:revenue_transaction_id>")
+class Revenue_Transactions(Resource):
     @api.doc(description="delete a transaction")
     @api.expect(auth_header)
     @api.response(200, "Success")  # Assuming you have a transaction_model defined
     @api.response(403, "Incorrect email or password / Token not provided")
     @api.response(500, "Database error")
-    def delete(self, expense_transaction_id):
+    def delete(self, revenue_transaction_id):
         user_id = check_token(request)
-        expense_transaction_id = validate_expense_transaction_id(user_id, expense_transaction_id)
-        delete_transaction(expense_transaction_id)
+        revenue_transaction_id = validate_revenue_transaction_id(user_id, revenue_transaction_id)
+        delete_revenue_transaction(revenue_transaction_id)
         return

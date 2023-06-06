@@ -30,7 +30,7 @@ function Row3() {
     fetchExpenseTransactions();
   }, []);
 
-  const formattedData = fetchExpenseAPI(() => {
+  const formattedData = useMemo(() => {
     const filteredData = data.filter((transaction) => {
       const currentYear = new Date().getFullYear();
       const transactionYear = new Date(transaction.date).getFullYear();

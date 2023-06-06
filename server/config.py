@@ -4,7 +4,7 @@ from flask_restx import Api
 from flask_cors import CORS
 from exts import db, migrate
 from utils.util import initialize_categories
-from db.models import Expense_Category, Income_Category
+from db.models import Expense_Category, Revenue_Category
 
 MYSQL_HOST = 'localhost'
 MYSQL_PORT = 3306
@@ -49,7 +49,7 @@ def create_app(config_class=ProductionConfig):
     api.init_app(app)
 
     with app.app_context():
-        if Expense_Category.query.count() == 0 or Income_Category.query.count() == 0:  # if Category is empty, initialize it
+        if Expense_Category.query.count() == 0 or Revenue_Category.query.count() == 0:  # if Category is empty, initialize it
             initialize_categories()
         
 
@@ -58,10 +58,12 @@ def create_app(config_class=ProductionConfig):
         auth,
         account,
         expense,
+        revenue,
     )
 
     api.add_namespace(auth.api)
     api.add_namespace(account.api)
     api.add_namespace(expense.api)
+    api.add_namespace(revenue.api)
 
     return app
