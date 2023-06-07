@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import Sidebar from "../components/Sidebar";
 import AuthedNavbar from "../components/AuthedNavbar";
 import {
@@ -26,41 +26,6 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 
-const columns = [
-  { field: "id", headerName: "ID", width: 90 },
-  {
-    field: "date",
-    headerName: "Date",
-    width: 200,
-    editable: false,
-  },
-  {
-    field: "category",
-    headerName: "Category",
-    width: 150,
-    editable: false,
-    valueGetter: (params) => categoryMapping[params.value] || "",
-  },
-  {
-    field: "amount",
-    headerName: "Amount",
-    type: "number",
-    width: 150,
-    editable: false,
-    valueFormatter: (params) => `$${params.value}`,
-    align: "left",
-    headerAlign: "left",
-  },
-  {
-    field: "description",
-    headerName: "Description",
-    sortable: false,
-    editable: false,
-    width: 150,
-    valueGetter: (params) => params.row.description || "",
-  },
-];
-
 const categoryMapping = {
   1: "Eating Out",
   2: "Shopping",
@@ -81,8 +46,47 @@ function Expense() {
   const [description, setDescription] = useState("");
   const [date, setDate] = useState(null);
   const [rows, setRows] = useState([]);
+  const [selectedRows, setSelectedRows] = useState([]);
 
   const [openDia, setOpenDia] = useState(false);
+
+  const columns = useMemo(
+    () => [
+      { field: "id", headerName: "ID", width: 90 },
+      {
+        field: "date",
+        headerName: "Date",
+        width: 200,
+        editable: false,
+      },
+      {
+        field: "category",
+        headerName: "Category",
+        width: 150,
+        editable: false,
+        valueGetter: (params) => categoryMapping[params.value] || "",
+      },
+      {
+        field: "amount",
+        headerName: "Amount",
+        type: "number",
+        width: 150,
+        editable: false,
+        valueFormatter: (params) => `$${params.value}`,
+        align: "left",
+        headerAlign: "left",
+      },
+      {
+        field: "description",
+        headerName: "Description",
+        sortable: false,
+        editable: false,
+        width: 150,
+        valueGetter: (params) => params.row.description || "",
+      },
+    ],
+    [],
+  );
 
   const addExpenseTransaction = async (date, category, amount, description) => {
     const authToken = localStorage.getItem("authToken");
@@ -102,38 +106,40 @@ function Expense() {
     }
   };
 
-  const editExpenseTransaction = async (
-    id,
-    date,
-    category,
-    amount,
-    description,
-  ) => {
-    const authToken = localStorage.getItem("authToken");
-    try {
-      const formattedDate = date.toISOString().split("T")[0];
-      const amountValue = parseFloat(amount);
-      const categoryValue = parseInt(category);
-      await editExpenseAPI(
-        authToken,
-        id,
-        formattedDate,
-        categoryValue,
-        amountValue,
-        description,
-      );
-    } catch (error) {
-      alert(error);
-    }
-  };
+  // const editExpenseTransaction = async (
+  //   id,
+  //   date,
+  //   category,
+  //   amount,
+  //   description,
+  // ) => {
+  //   const authToken = localStorage.getItem("authToken");
+  //   try {
+  //     const formattedDate = date.toISOString().split("T")[0];
+  //     const amountValue = parseFloat(amount);
+  //     const categoryValue = parseInt(category);
+  //     await editExpenseAPI(
+  //       authToken,
+  //       id,
+  //       formattedDate,
+  //       categoryValue,
+  //       amountValue,
+  //       description,
+  //     );
+  //   } catch (error) {
+  //     alert(error);
+  //   }
+  // };
 
-  const deleteExpenseTransaction = async (trueId) => {
+  const deleteExpenseTransaction = async (ids) => {
     const authToken = localStorage.getItem("authToken");
     try {
-      // Call the deleteExpenseAPI with the trueId parameter
-      await deleteExpenseAPI(authToken, trueId);
-      // After successfully deleting the transaction, you can update the rows state by filtering out the deleted transaction
-      setRows((prevRows) => prevRows.filter((row) => row.true_id !== trueId));
+      if (ids.length > 0) {
+        for (const id of ids) {
+          await deleteExpenseAPI(authToken, id);
+          setRows((prevRows) => prevRows.filter((row) => row.true_id !== id));
+        }
+      }
     } catch (error) {
       alert(error);
     }
@@ -172,8 +178,6 @@ function Expense() {
     fetchExpenseTransactions();
   }, []);
 
-  console.log(rows);
-
   return (
     <>
       <AuthedNavbar />
@@ -186,7 +190,6 @@ function Expense() {
           style={{
             backgroundColor: palette.success.main,
             color: palette.success.light,
-            display: "flex",
             marginLeft: "auto",
             alignItems: "center",
             marginRight: "2rem",
@@ -195,6 +198,19 @@ function Expense() {
           onClick={() => setOpenDia(true)}
         >
           Record your expense
+        </Button>
+        <Button
+          style={{
+            backgroundColor: palette.error.main,
+            color: "black",
+            alignItems: "center",
+            marginRight: "2rem",
+            marginBottom: "1rem",
+          }}
+          onClick={() => deleteExpenseTransaction(selectedRows)}
+          disabled={selectedRows.length === 0}
+        >
+          Delete
         </Button>
         <Dialog open={openDia} maxWidth="lg">
           <DialogContent>
@@ -276,15 +292,12 @@ function Expense() {
           pageSize={10} // Set the initial page size to 10
           pagination
           paginationMode="server" // Enable server-side pagination
-          onPageChange={(params) => {
-            // Handle page change
-            console.log(params.page);
-            // Fetch new data based on the current page using server-side pagination
-            // You can make an API call here to fetch the data for the current page
-            // Update the rows with the new data
-            // setRows(newData);
+          onRowSelectionModelChange={(selectionModel) => {
+            const selectedRowIds = selectionModel.map(
+              (index) => rows[index - 1]?.true_id,
+            );
+            setSelectedRows(selectedRowIds);
           }}
-          onEditCellChange={editExpenseTransaction}
           rowCount={rows.length}
           rowsPerPageOptions={[10]} // Set the available page size options to only 10
           checkboxSelection

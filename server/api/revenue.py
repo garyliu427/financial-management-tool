@@ -60,7 +60,7 @@ class Revenue(Resource):
             abort(403, "Require amount, category, description, and date in the json")
 
 
-        edit_transaction(user_id, amount, category, description, date)
+        edit_revenue_transaction(user_id, amount, category, description, date)
         return
     
 

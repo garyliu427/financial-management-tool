@@ -69,8 +69,8 @@ add_expense_model = api.model(
 
 edit_expense_model = api.model(
     "edit_expense",
-    {
-        "amount": fields.Float(required=True, example=123.45),
+    {   
+        "amount": fields.Float(required=True, example=150.45),
         "category": fields.Integer(required=True, example=1),
         "description": fields.String(required=True, example="buy a burger"),
         "date": fields.String(required=True, example="2021-01-01"),

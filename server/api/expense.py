@@ -12,7 +12,7 @@ api = Namespace(
 
 
 @api.route("")
-class Expense(Resource):
+class Expense_Transaction(Resource):
     @api.doc(description="record expense")
     @api.expect(auth_header, add_expense_model)
     @api.response(200, "Success")
@@ -39,7 +39,7 @@ class Expense(Resource):
 
 
 @api.route("/<int:expense_transaction_id>")
-class Expense(Resource):
+class Edit_Expense_Transaction(Resource):
     @api.doc(description="edit expense")
     @api.expect(auth_header, edit_expense_model)
     @api.response(200, "Success")
@@ -60,13 +60,12 @@ class Expense(Resource):
         if amount is None or category is None or description is None or date is None:
             abort(403, "Require amount, category, description, and date in the json")
 
-
-        edit_transaction(user_id, amount, category, description, date)
+        edit_expense_transaction(user_id, amount, category, description, date)
         return
     
 
 @api.route("/transactions")
-class Expense_Transaction(Resource):
+class Get_Expense_Transaction(Resource):
     @api.doc(description="get all transactions for the user")
     @api.expect(auth_header)
     @api.response(200, "Success")  # Assuming you have a transaction_model defined
@@ -80,7 +79,7 @@ class Expense_Transaction(Resource):
     
 
 @api.route("/<int:expense_transaction_id>")
-class Expense_Transaction(Resource):
+class Delete_Expense_Transaction(Resource):
     @api.doc(description="delete a transaction")
     @api.expect(auth_header)
     @api.response(200, "Success")  # Assuming you have a transaction_model defined
@@ -89,5 +88,5 @@ class Expense_Transaction(Resource):
     def delete(self, expense_transaction_id):
         user_id = check_token(request)
         expense_transaction_id = validate_expense_transaction_id(user_id, expense_transaction_id)
-        delete_transaction(expense_transaction_id)
+        delete_expense_transaction(expense_transaction_id)
         return

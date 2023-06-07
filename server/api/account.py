@@ -38,7 +38,7 @@ class MyAccount(Resource):
             abort(
                 403, "Need to provide at least one of email, password, username, avatar"
             )
-
+            
         # password at least 6 characters
         if password is not None and len(password) < 6:
             abort(403, "Password at least 6 characters length")

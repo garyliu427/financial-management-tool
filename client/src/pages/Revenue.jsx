@@ -61,16 +61,10 @@ const columns = [
 ];
 
 const categoryMapping = {
-  1: "Eating Out",
-  2: "Shopping",
-  3: "Groceries",
-  4: "Utilities",
-  5: "Entertainment",
-  6: "Transport",
-  7: "Health",
-  8: "Travel",
-  9: "Education",
-  10: "Others",
+  1: "Salary",
+  2: "Bonus",
+  3: "Investment",
+  4: "Others",
 };
 
 function Revenue() {

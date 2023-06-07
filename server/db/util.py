@@ -89,7 +89,7 @@ def insert_new_expense(user_id, amount, category, description, date):
     db.session.commit()
 
 
-def edit_transaction(expense_transaction_id, amount, category, description, date):
+def edit_expense_transaction(expense_transaction_id, amount, category, description, date):
     expense = db.session.get(Expense_transaction, expense_transaction_id)
     if amount is not None:
         expense.expense_transaction_amount = amount
@@ -115,7 +115,7 @@ def insert_new_revenue(user_id, amount, category, description, date):
     db.session.commit()
 
 
-def edit_transaction(expense_transaction_id, amount, category, description, date):
+def edit_expense_transaction(expense_transaction_id, amount, category, description, date):
     expense = db.session.get(Expense_transaction, expense_transaction_id)
     if amount is not None:
         expense.expense_transaction_amount = amount
