@@ -79,7 +79,7 @@ class Revenue_Transactions(Resource):
     
 
 @api.route("/<int:revenue_transaction_id>")
-class Revenue_Transactions(Resource):
+class Delete_Revenue_Transaction(Resource):
     @api.doc(description="delete a transaction")
     @api.expect(auth_header)
     @api.response(200, "Success")  # Assuming you have a transaction_model defined

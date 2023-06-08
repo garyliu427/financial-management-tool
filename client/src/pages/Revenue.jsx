@@ -17,6 +17,7 @@ import {
   postRevenueAPI,
   fetchRevenueAPI,
   editRevenueAPI,
+  deleteRevenueAPI,
 } from "../api/revenue";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -76,6 +77,8 @@ function Revenue() {
   const [rows, setRows] = useState([]);
 
   const [openDia, setOpenDia] = useState(false);
+  const [selectedRows, setSelectedRows] = useState([]);
+  const [shouldUpdate, setShouldUpdate] = useState(false);
 
   const addRevenueTransaction = async (date, category, amount, description) => {
     const authToken = localStorage.getItem("authToken");
@@ -90,6 +93,7 @@ function Revenue() {
         amountValue,
         description,
       );
+      setShouldUpdate(true);
     } catch (error) {
       alert(error);
     }
@@ -115,6 +119,20 @@ function Revenue() {
         amountValue,
         description,
       );
+    } catch (error) {
+      alert(error);
+    }
+  };
+
+  const deleteRevenueTransaction = async (ids) => {
+    const authToken = localStorage.getItem("authToken");
+    try {
+      if (ids.length > 0) {
+        for (const id of ids) {
+          await deleteRevenueAPI(authToken, id);
+          setRows((prevRows) => prevRows.filter((row) => row.true_id !== id));
+        }
+      }
     } catch (error) {
       alert(error);
     }
@@ -151,7 +169,12 @@ function Revenue() {
     };
 
     fetchRevenueTransactions();
-  }, []);
+
+    if (shouldUpdate) {
+      setShouldUpdate(false); // Reset the state
+      fetchRevenueTransactions(); // Fetch the updated expense transactions
+    }
+  }, [shouldUpdate]);
 
   console.log(rows);
 
@@ -176,6 +199,20 @@ function Revenue() {
           onClick={() => setOpenDia(true)}
         >
           Record your income
+        </Button>
+        <Button
+          style={{
+            backgroundColor:
+              selectedRows.length === 0 ? "#fbcac6" : palette.error.main,
+            color: selectedRows.length === 0 ? "black" : "rgb(87, 34, 34)",
+            alignItems: "center",
+            marginRight: "2rem",
+            marginBottom: "1rem",
+          }}
+          onClick={() => deleteRevenueTransaction(selectedRows)}
+          disabled={selectedRows.length === 0}
+        >
+          Delete
         </Button>
         <Dialog open={openDia} maxWidth="lg">
           <DialogContent>
@@ -257,19 +294,15 @@ function Revenue() {
           pageSize={10} // Set the initial page size to 10
           pagination
           paginationMode="server" // Enable server-side pagination
-          onPageChange={(params) => {
-            // Handle page change
-            console.log(params.page);
-            // Fetch new data based on the current page using server-side pagination
-            // You can make an API call here to fetch the data for the current page
-            // Update the rows with the new data
-            // setRows(newData);
+          onRowSelectionModelChange={(selectionModel) => {
+            const selectedRowIds = selectionModel.map(
+              (index) => rows[index - 1]?.true_id,
+            );
+            setSelectedRows(selectedRowIds);
           }}
-          onEditCellChange={editRevenueTransaction}
           rowCount={rows.length}
           rowsPerPageOptions={[10]} // Set the available page size options to only 10
           checkboxSelection
-          disableRowSelectionOnClick
         />
       </Box>
     </>

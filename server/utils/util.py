@@ -170,7 +170,7 @@ def delete_expense_transaction(expense_transaction_id):
 
 
 def delete_revenue_transaction(revenue_transaction_id):
-    transaction = db.session.get(Expense_transaction, revenue_transaction_id)
+    transaction = db.session.get(Revenue_transaction, revenue_transaction_id)
     if transaction is None:
         raise ValueError("Transaction not found for ID: {}".format(revenue_transaction_id))
     db.session.delete(transaction)
@@ -183,9 +183,9 @@ def validate_revenue_transaction_id(user_id, revenue_transaction_id):
     except:
         abort(401, "User_id {} is not an integer".format(revenue_transaction_id))
 
-    expense_transaction = db.session.query(Revenue_transaction).get(revenue_transaction_id)
+    revenue_transaction = db.session.query(Revenue_transaction).get(revenue_transaction_id)
 
-    if expense_transaction.user_id != user_id:
+    if revenue_transaction.user_id != user_id:
         abort(
             401, "review_id {} does not belong to user_id {}".format(revenue_transaction_id, user_id)
         )

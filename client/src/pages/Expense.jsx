@@ -47,6 +47,7 @@ function Expense() {
   const [date, setDate] = useState(null);
   const [rows, setRows] = useState([]);
   const [selectedRows, setSelectedRows] = useState([]);
+  const [shouldUpdate, setShouldUpdate] = useState(false);
 
   const [openDia, setOpenDia] = useState(false);
 
@@ -101,6 +102,7 @@ function Expense() {
         amountValue,
         description,
       );
+      setShouldUpdate(true);
     } catch (error) {
       alert(error);
     }
@@ -176,7 +178,12 @@ function Expense() {
     };
 
     fetchExpenseTransactions();
-  }, []);
+
+    if (shouldUpdate) {
+      setShouldUpdate(false); // Reset the state
+      fetchExpenseTransactions(); // Fetch the updated expense transactions
+    }
+  }, [shouldUpdate]);
 
   return (
     <>
@@ -201,8 +208,9 @@ function Expense() {
         </Button>
         <Button
           style={{
-            backgroundColor: palette.error.main,
-            color: "black",
+            backgroundColor:
+              selectedRows.length === 0 ? "#fbcac6" : palette.error.main,
+            color: selectedRows.length === 0 ? "black" : "rgb(87, 34, 34)",
             alignItems: "center",
             marginRight: "2rem",
             marginBottom: "1rem",
@@ -289,7 +297,7 @@ function Expense() {
         <DataGrid
           rows={rows}
           columns={columns}
-          pageSize={10} // Set the initial page size to 10
+          pageSize={2} // Set the initial page size to 10
           pagination
           paginationMode="server" // Enable server-side pagination
           onRowSelectionModelChange={(selectionModel) => {
@@ -299,9 +307,8 @@ function Expense() {
             setSelectedRows(selectedRowIds);
           }}
           rowCount={rows.length}
-          rowsPerPageOptions={[10]} // Set the available page size options to only 10
+          rowsPerPageOptions={[2]}
           checkboxSelection
-          disableRowSelectionOnClick
         />
       </Box>
     </>
