@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const instance = axios.create({
-  baseURL: "https://cryptic-scrubland-51274.herokuapp.com/",
+  baseURL: "https://financial-management-m2kl.onrender.com/",
 });
 
 export default instance;
