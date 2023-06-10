@@ -6,11 +6,11 @@ from exts import db, migrate
 from utils.util import initialize_categories
 from db.models import Expense_Category, Revenue_Category
 
-MYSQL_HOST = 'localhost'
+MYSQL_HOST = 'us-cdbr-east-06.cleardb.net'
 MYSQL_PORT = 3306
-MYSQL_USER = 'root'
-MYSQL_PASSWORD = '990427aBc'
-MYSQL_DB = 'finance_management'
+MYSQL_USER = 'bb4ac5c22daa68'
+MYSQL_PASSWORD = '30d78628'
+MYSQL_DB = 'heroku_0cf9d5ae1fc1e9a'
 # Database URI for SQLAlchemy
 DB_URI = 'mysql+pymysql://{}:{}@{}:{}/{}?charset=utf8mb4'.format(
     MYSQL_USER, MYSQL_PASSWORD, MYSQL_HOST, MYSQL_PORT, MYSQL_DB)
