@@ -2,6 +2,8 @@ import DashboardBox from "../../src/components/DashboardBox";
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend } from "recharts";
 import { useEffect, useState, useMemo } from "react";
 import { fetchExpenseAPI } from "../api/expense";
+import BoxHeader from "../components/BoxHeader";
+import { Divider } from "@mui/material";
 
 const categoryMapping = {
   1: "Eating Out",
@@ -90,12 +92,12 @@ function Row2() {
     }));
   }, [expenseData]);
 
-  console.log("Hi", transformedData);
-
   return (
     <>
       <DashboardBox gridArea="d">
-        <ResponsiveContainer width="100%" height="100%">
+        <BoxHeader title="Expense by Category" />
+        <Divider sx={{ paddingBottom: "0.5rem" }} />
+        <ResponsiveContainer width="90%" height="80%">
           <PieChart width={400} height={400}>
             <Pie
               data={transformedData}

@@ -55,11 +55,11 @@ const Sidebar = () => {
               <PaidIcon sx={{ marginRight: "1.5rem", marginLeft: "1rem" }} />
               <ListItemText primary="Revenue" />
             </ListItemButton>
-            <ListItemButton onClick={() => navigate("/dashboard/predictions")}>
+            <ListItemButton onClick={() => navigate("/dashboard/prediction")}>
               <BatchPredictionIcon
                 sx={{ marginRight: "1.5rem", marginLeft: "1rem" }}
               />
-              <ListItemText primary="Predictions" />
+              <ListItemText primary="Prediction" />
             </ListItemButton>
           </List>
         </Box>

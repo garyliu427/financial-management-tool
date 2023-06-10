@@ -12,6 +12,7 @@ import Default from "./pages/Default";
 import Revenue from "./pages/Revenue";
 import { useSelector } from "react-redux";
 import { selectUser } from "./features/userSlice";
+import Prediction from "./pages/Prediction";
 
 function App() {
   const theme = useMemo(() => createTheme(themeOptions), []);
@@ -40,7 +41,7 @@ function App() {
               <Route path="/dashboard/default" element={<Default />} />
               <Route path="/dashboard/expense" element={<Expense />} />
               <Route path="/dashboard/revenue" element={<Revenue />} />
-              <Route path="/predictions" element={<div>predictions</div>} />
+              <Route path="/dashboard/prediction" element={<Prediction />} />
               <Route path="/register" element={<Register />} />
               <Route path="/login" element={<Login />} />
             </Routes>

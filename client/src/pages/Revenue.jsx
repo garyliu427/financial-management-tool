@@ -11,7 +11,7 @@ import {
   TextField,
   DialogActions,
 } from "@mui/material";
-import { DataGrid } from "@mui/x-data-grid";
+import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { useTheme } from "@mui/material/styles";
 import {
   postRevenueAPI,
@@ -184,7 +184,7 @@ function Revenue() {
       <Sidebar />
       <Box marginLeft="15rem" marginTop="6rem" display="flex">
         <Typography padding="1rem" variant="h4">
-          Your Transactions List
+          Revenue Statement
         </Typography>
         <Button
           style={{
@@ -219,21 +219,32 @@ function Revenue() {
             <DialogContentText>
               Input your transaction details below
             </DialogContentText>
-            <Box margin="1rem" width="400px">
-              <Box display="flex" alignItems="center" margin="0.5rem">
-                <Typography>Date:</Typography>
+            <Box margin="1rem" fullWidth maxWidth="md" display="flex">
+              <Box
+                display="flex"
+                flexDirection="column"
+                alignItems="center"
+                margin="0.5rem"
+              >
+                <Typography>Date</Typography>
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DemoContainer components={["DatePicker"]}>
+                    <DatePicker
+                      label="Basic date time picker"
+                      value={date}
+                      onChange={(date) => setDate(date)}
+                      disableFuture
+                    />
+                  </DemoContainer>
+                </LocalizationProvider>
               </Box>
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DemoContainer components={["DatePicker"]}>
-                  <DatePicker
-                    label="Basic date time picker"
-                    value={date}
-                    onChange={(date) => setDate(date)}
-                  />
-                </DemoContainer>
-              </LocalizationProvider>
-              <Box display="flex" alignItems="center" margin="0.5rem">
-                <Typography>Category:</Typography>
+              <Box
+                display="flex"
+                flexDirection="column"
+                alignItems="center"
+                margin="0.5rem"
+              >
+                <Typography>Category</Typography>
                 <Select
                   id="category"
                   fullWidth
@@ -248,8 +259,13 @@ function Revenue() {
                   ))}
                 </Select>
               </Box>
-              <Box display="flex" alignItems="center" margin="0.5rem">
-                <Typography>Amount:</Typography>
+              <Box
+                display="flex"
+                flexDirection="column"
+                alignItems="center"
+                margin="0.5rem"
+              >
+                <Typography>Amount</Typography>
                 <TextField
                   autoFocus
                   id="amount"
@@ -260,8 +276,13 @@ function Revenue() {
                   onChange={(e) => setAmount(e.target.value)}
                 />
               </Box>
-              <Box display="flex" alignItems="center" margin="0.5rem">
-                <Typography>Description:</Typography>
+              <Box
+                display="flex"
+                flexDirection="column"
+                alignItems="center"
+                margin="0.5rem"
+              >
+                <Typography>Description</Typography>
                 <TextField
                   autoFocus
                   id="description"
@@ -300,6 +321,7 @@ function Revenue() {
             );
             setSelectedRows(selectedRowIds);
           }}
+          slots={{ toolbar: GridToolbar }}
           rowCount={rows.length}
           rowsPerPageOptions={[10]} // Set the available page size options to only 10
           checkboxSelection

@@ -12,7 +12,8 @@ MYSQL_USER = 'root'
 MYSQL_PASSWORD = '990427aBc'
 MYSQL_DB = 'finance_management'
 # Database URI for SQLAlchemy
-DB_URI = 'mysql+pymysql://{}:{}@{}:{}/{}?charset=utf8mb4'.format(MYSQL_USER, MYSQL_PASSWORD, MYSQL_HOST, MYSQL_PORT, MYSQL_DB)
+DB_URI = 'mysql+pymysql://{}:{}@{}:{}/{}?charset=utf8mb4'.format(
+    MYSQL_USER, MYSQL_PASSWORD, MYSQL_HOST, MYSQL_PORT, MYSQL_DB)
 SQLALCHEMY_DATABASE_URI_STRING = DB_URI
 
 
@@ -49,9 +50,9 @@ def create_app(config_class=ProductionConfig):
     api.init_app(app)
 
     with app.app_context():
-        if Expense_Category.query.count() == 0 or Revenue_Category.query.count() == 0:  # if Category is empty, initialize it
+        # if Category is empty, initialize it
+        if Expense_Category.query.count() == 0 or Revenue_Category.query.count() == 0:
             initialize_categories()
-        
 
     # Register your API routes here, e.g.
     from api import (

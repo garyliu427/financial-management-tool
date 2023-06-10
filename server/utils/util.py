@@ -6,6 +6,7 @@ from sqlalchemy import inspect
 
 key = "W~_2uc9p!K~'$NGB=s~^ABs[`"
 
+
 def to_dict(obj):
     if type(obj) is tuple:
         return {o.__tablename__: to_dict(o) for o in obj}
@@ -34,7 +35,7 @@ def to_list(obj_list):
         return [to_dict(tuple(obj)) for obj in obj_list]
     else:
         return [to_dict(obj) for obj in obj_list]
-    
+
 
 def check_token(request):
     token = request.headers.get("Authorization")
@@ -94,7 +95,7 @@ def delete_token(email):
         db.session.commit()
     except Exception as e:
         abort(500, "Database error")
-    
+
 
 def initialize_categories():
     expense_categories = [
@@ -118,11 +119,13 @@ def initialize_categories():
     ]
 
     for category_data in expense_categories:
-        category = Expense_Category(expense_category_name=category_data['expense_category_name'])
+        category = Expense_Category(
+            expense_category_name=category_data['expense_category_name'])
         db.session.add(category)
 
     for category_data in revenue_categories:
-        category = Revenue_Category(revenue_category_name=category_data['revenue_category_name'])
+        category = Revenue_Category(
+            revenue_category_name=category_data['revenue_category_name'])
         db.session.add(category)
 
     db.session.commit()
@@ -135,11 +138,13 @@ def validate_expense_transaction_id(user_id, expense_transaction_id):
     except:
         abort(401, "User_id {} is not an integer".format(expense_transaction_id))
 
-    expense_transaction = db.session.query(Expense_transaction).get(expense_transaction_id)
+    expense_transaction = db.session.query(
+        Expense_transaction).get(expense_transaction_id)
 
     if expense_transaction.user_id != user_id:
         abort(
-            401, "review_id {} does not belong to user_id {}".format(expense_transaction_id, user_id)
+            401, "review_id {} does not belong to user_id {}".format(
+                expense_transaction_id, user_id)
         )
     return expense_transaction_id
 
@@ -148,23 +153,28 @@ def get_user_expense_transactions(user_id):
     transactions = Expense_transaction.query.filter_by(user_id=user_id).all()
     return transactions
 
+
 def get_user_revenue_transactions(user_id):
     transactions = Revenue_transaction.query.filter_by(user_id=user_id).all()
     return transactions
 
+
 def serialize_expense_transaction(transaction):
     return {
         "expense_transaction_id": transaction.expense_transaction_id,
-        "date": transaction.expense_transaction_datetime.strftime("%Y-%m-%d"),  # Convert date to string format
+        # Convert date to string format
+        "date": transaction.expense_transaction_datetime.strftime("%Y-%m-%d"),
         "category": transaction.expense_category_id,
         "amount": transaction.expense_transaction_amount,
         "description": transaction.expense_transaction_description,
     }
 
+
 def delete_expense_transaction(expense_transaction_id):
     transaction = db.session.get(Expense_transaction, expense_transaction_id)
     if transaction is None:
-        raise ValueError("Transaction not found for ID: {}".format(expense_transaction_id))
+        raise ValueError("Transaction not found for ID: {}".format(
+            expense_transaction_id))
     db.session.delete(transaction)
     db.session.commit()
 
@@ -172,7 +182,8 @@ def delete_expense_transaction(expense_transaction_id):
 def delete_revenue_transaction(revenue_transaction_id):
     transaction = db.session.get(Revenue_transaction, revenue_transaction_id)
     if transaction is None:
-        raise ValueError("Transaction not found for ID: {}".format(revenue_transaction_id))
+        raise ValueError("Transaction not found for ID: {}".format(
+            revenue_transaction_id))
     db.session.delete(transaction)
     db.session.commit()
 
@@ -183,11 +194,13 @@ def validate_revenue_transaction_id(user_id, revenue_transaction_id):
     except:
         abort(401, "User_id {} is not an integer".format(revenue_transaction_id))
 
-    revenue_transaction = db.session.query(Revenue_transaction).get(revenue_transaction_id)
+    revenue_transaction = db.session.query(
+        Revenue_transaction).get(revenue_transaction_id)
 
     if revenue_transaction.user_id != user_id:
         abort(
-            401, "review_id {} does not belong to user_id {}".format(revenue_transaction_id, user_id)
+            401, "review_id {} does not belong to user_id {}".format(
+                revenue_transaction_id, user_id)
         )
     return revenue_transaction_id
 
@@ -195,7 +208,8 @@ def validate_revenue_transaction_id(user_id, revenue_transaction_id):
 def serialize_revenue_transaction(transaction):
     return {
         "revenue_transaction_id": transaction.revenue_transaction_id,
-        "date": transaction.revenue_transaction_datetime.strftime("%Y-%m-%d"),  # Convert date to string format
+        # Convert date to string format
+        "date": transaction.revenue_transaction_datetime.strftime("%Y-%m-%d"),
         "category": transaction.revenue_category_id,
         "amount": transaction.revenue_transaction_amount,
         "description": transaction.revenue_transaction_description,

@@ -5,6 +5,8 @@ import random
 import string
 
 # generate a random password that meet the constraints
+
+
 def generate_password():
     uppercase_letters = string.ascii_uppercase
     lowercase_letters = string.ascii_lowercase
@@ -17,13 +19,13 @@ def generate_password():
     password.append(random.choice(numbers))
 
     for _ in range(7):
-        char_set = random.choice([uppercase_letters, lowercase_letters, numbers])
+        char_set = random.choice(
+            [uppercase_letters, lowercase_letters, numbers])
         password.append(random.choice(char_set))
 
     random.shuffle(password)
 
     return "".join(password)
-
 
 
 # check if the email is unique
@@ -39,7 +41,6 @@ def insert_new_user(username, password, email):
 
     db.session.add(new_user)
     db.session.commit()
-
 
 
 # reset an account with the given email,
@@ -112,17 +113,4 @@ def insert_new_revenue(user_id, amount, category, description, date):
     )
 
     db.session.add(new_revenue)
-    db.session.commit()
-
-
-def edit_expense_transaction(expense_transaction_id, amount, category, description, date):
-    expense = db.session.get(Expense_transaction, expense_transaction_id)
-    if amount is not None:
-        expense.expense_transaction_amount = amount
-    if date is not None:
-        expense.expense_transaction_datetime = date
-    if description is not None:
-        expense.expense_transaction_description = description
-    if category is not None:
-        expense.expense_category_id = category
     db.session.commit()

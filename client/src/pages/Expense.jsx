@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo, useCallback } from "react";
 import Sidebar from "../components/Sidebar";
 import AuthedNavbar from "../components/AuthedNavbar";
 import {
@@ -11,7 +11,7 @@ import {
   TextField,
   DialogActions,
 } from "@mui/material";
-import { DataGrid } from "@mui/x-data-grid";
+import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { useTheme } from "@mui/material/styles";
 import {
   postExpenseAPI,
@@ -41,10 +41,10 @@ const categoryMapping = {
 
 function Expense() {
   const { palette } = useTheme();
-  const [amount, setAmount] = useState("");
-  const [category, setCategory] = useState("");
+  const [amount, setAmount] = useState(null);
+  const [category, setCategory] = useState(null);
   const [description, setDescription] = useState("");
-  const [date, setDate] = useState(null);
+  const [date, setDate] = useState();
   const [rows, setRows] = useState([]);
   const [selectedRows, setSelectedRows] = useState([]);
   const [shouldUpdate, setShouldUpdate] = useState(false);
@@ -64,7 +64,7 @@ function Expense() {
         field: "category",
         headerName: "Category",
         width: 150,
-        editable: false,
+        editable: true,
         valueGetter: (params) => categoryMapping[params.value] || "",
       },
       {
@@ -72,7 +72,7 @@ function Expense() {
         headerName: "Amount",
         type: "number",
         width: 150,
-        editable: false,
+        editable: true,
         valueFormatter: (params) => `$${params.value}`,
         align: "left",
         headerAlign: "left",
@@ -81,7 +81,7 @@ function Expense() {
         field: "description",
         headerName: "Description",
         sortable: false,
-        editable: false,
+        editable: true,
         width: 150,
         valueGetter: (params) => params.row.description || "",
       },
@@ -108,30 +108,26 @@ function Expense() {
     }
   };
 
-  // const editExpenseTransaction = async (
-  //   id,
-  //   date,
-  //   category,
-  //   amount,
-  //   description,
-  // ) => {
-  //   const authToken = localStorage.getItem("authToken");
-  //   try {
-  //     const formattedDate = date.toISOString().split("T")[0];
-  //     const amountValue = parseFloat(amount);
-  //     const categoryValue = parseInt(category);
-  //     await editExpenseAPI(
-  //       authToken,
-  //       id,
-  //       formattedDate,
-  //       categoryValue,
-  //       amountValue,
-  //       description,
-  //     );
-  //   } catch (error) {
-  //     alert(error);
-  //   }
-  // };
+  const editExpenseTransaction = useCallback(
+    async (id, date, category, amount, description) => {
+      const authToken = localStorage.getItem("authToken");
+      try {
+        const amountValue = parseFloat(amount);
+        await editExpenseAPI(
+          authToken,
+          id,
+          date,
+          category,
+          amountValue,
+          description,
+        );
+        setShouldUpdate(true);
+      } catch (error) {
+        alert(error);
+      }
+    },
+    [],
+  );
 
   const deleteExpenseTransaction = async (ids) => {
     const authToken = localStorage.getItem("authToken");
@@ -191,7 +187,7 @@ function Expense() {
       <Sidebar />
       <Box marginLeft="15rem" marginTop="6rem" display="flex">
         <Typography padding="1rem" variant="h4">
-          Your Transactions List
+          Expense Statement
         </Typography>
         <Button
           style={{
@@ -208,6 +204,27 @@ function Expense() {
         </Button>
         <Button
           style={{
+            backgroundColor: selectedRows.length === 0 ? "#d4fbfc" : "#44f3f9",
+            color: selectedRows.length === 0 ? "black" : "rgb(87, 34, 34)",
+            alignItems: "center",
+            marginRight: "2rem",
+            marginBottom: "1rem",
+          }}
+          onClick={() =>
+            editExpenseTransaction(
+              selectedRows,
+              date,
+              category,
+              amount,
+              description,
+            )
+          }
+          disabled={selectedRows.length === 0}
+        >
+          Save
+        </Button>
+        <Button
+          style={{
             backgroundColor:
               selectedRows.length === 0 ? "#fbcac6" : palette.error.main,
             color: selectedRows.length === 0 ? "black" : "rgb(87, 34, 34)",
@@ -220,26 +237,40 @@ function Expense() {
         >
           Delete
         </Button>
-        <Dialog open={openDia} maxWidth="lg">
+        <Dialog open={openDia} fullWidth maxWidth="md">
           <DialogContent>
             <DialogContentText>
               Input your transaction details below
             </DialogContentText>
-            <Box margin="1rem" width="400px">
-              <Box display="flex" alignItems="center" margin="0.5rem">
-                <Typography>Date:</Typography>
+            <Box margin="1rem" display="flex">
+              <Box
+                display="flex"
+                flexDirection="column"
+                alignItems="center"
+                margin="0.5rem"
+              >
+                <Typography>Date</Typography>
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DemoContainer
+                    components={["DatePicker"]}
+                    sx={{ padding: 0 }}
+                  >
+                    <DatePicker
+                      label="Basic date time picker"
+                      value={date}
+                      onChange={(date) => setDate(date)}
+                      disableFuture
+                    />
+                  </DemoContainer>
+                </LocalizationProvider>
               </Box>
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DemoContainer components={["DatePicker"]}>
-                  <DatePicker
-                    label="Basic date time picker"
-                    value={date}
-                    onChange={(date) => setDate(date)}
-                  />
-                </DemoContainer>
-              </LocalizationProvider>
-              <Box display="flex" alignItems="center" margin="0.5rem">
-                <Typography>Category:</Typography>
+              <Box
+                display="flex"
+                flexDirection="column"
+                alignItems="center"
+                margin="0.5rem"
+              >
+                <Typography>Category</Typography>
                 <Select
                   id="category"
                   fullWidth
@@ -254,8 +285,13 @@ function Expense() {
                   ))}
                 </Select>
               </Box>
-              <Box display="flex" alignItems="center" margin="0.5rem">
-                <Typography>Amount:</Typography>
+              <Box
+                display="flex"
+                flexDirection="column"
+                alignItems="center"
+                margin="0.5rem"
+              >
+                <Typography>Amount</Typography>
                 <TextField
                   autoFocus
                   id="amount"
@@ -266,8 +302,13 @@ function Expense() {
                   onChange={(e) => setAmount(e.target.value)}
                 />
               </Box>
-              <Box display="flex" alignItems="center" margin="0.5rem">
-                <Typography>Description:</Typography>
+              <Box
+                display="flex"
+                flexDirection="column"
+                alignItems="center"
+                margin="0.5rem"
+              >
+                <Typography>Description</Typography>
                 <TextField
                   autoFocus
                   id="description"
@@ -309,6 +350,7 @@ function Expense() {
           rowCount={rows.length}
           rowsPerPageOptions={[2]}
           checkboxSelection
+          slots={{ toolbar: GridToolbar }}
         />
       </Box>
     </>
