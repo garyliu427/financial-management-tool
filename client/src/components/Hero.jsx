@@ -2,6 +2,7 @@ import React from "react";
 import { Typography, Box, Button } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
+import HeroImage from "../assets/hero.png";
 
 const Hero = () => {
   const theme = useTheme();
@@ -54,7 +55,7 @@ const Hero = () => {
               marginRight: "2rem",
             }}
             alt="Hero"
-            src="../../src/assets/hero.png"
+            src={HeroImage}
           />
         </Box>
       </Box>
