@@ -5,12 +5,16 @@ from flask_cors import CORS
 from exts import db, migrate
 from utils.util import initialize_categories
 from db.models import Expense_Category, Revenue_Category
+from dotenv import load_dotenv
+import os
 
-MYSQL_HOST = 'us-cdbr-east-06.cleardb.net'
-MYSQL_PORT = 3306
-MYSQL_USER = 'bb4ac5c22daa68'
-MYSQL_PASSWORD = '30d78628'
-MYSQL_DB = 'heroku_0cf9d5ae1fc1e9a'
+load_dotenv()
+
+MYSQL_HOST = os.environ.get('MYSQL_HOST')
+MYSQL_PORT = os.environ.get('MYSQL_PORT')
+MYSQL_USER = os.environ.get('MYSQL_USER')
+MYSQL_PASSWORD = os.environ.get('MYSQL_PASSWORD')
+MYSQL_DB = os.environ.get('MYSQL_DB')
 # Database URI for SQLAlchemy
 DB_URI = 'mysql+pymysql://{}:{}@{}:{}/{}?charset=utf8mb4'.format(
     MYSQL_USER, MYSQL_PASSWORD, MYSQL_HOST, MYSQL_PORT, MYSQL_DB)

@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const instance = axios.create({
-  baseURL: "https://financial-management-m2kl.onrender.com/",
+  baseURL: import.meta.env.VITE_API_URL,
 });
 
 export default instance;
